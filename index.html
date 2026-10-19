@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>House Localization – Trouvez votre logement au Gabon</title>
+<style>
+:root{--nuit:#0d2238;--vert:#0b5d43;--or:#c9a227;--fond:#f3f4f0;--carte:#fff;--texte:#16212c;--gris:#667380;--ligne:#e1e5e0}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--fond);color:var(--texte);line-height:1.5}
+.top{background:var(--nuit);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-family:Georgia,"Times New Roman",serif;font-size:1.15rem;font-weight:700;letter-spacing:.2px}
+.logo small{display:block;font-family:system-ui,sans-serif;font-weight:400;font-size:.7rem;color:#b8c4d0;letter-spacing:.4px}
+.top a{color:var(--nuit);background:var(--or);text-decoration:none;font-weight:700;font-size:.85rem;padding:8px 12px;border-radius:6px}
+.hero{background:linear-gradient(180deg,var(--nuit) 0%,#13395a 100%);color:#fff;padding:26px 16px 70px}
+.hero h1{font-family:Georgia,"Times New Roman",serif;font-size:1.75rem;line-height:1.2;margin:0 0 8px;max-width:520px}
+.hero p{margin:0;color:#c9d4df;max-width:480px}
+.wrap{max-width:760px;margin:0 auto}
+.panneau{background:var(--carte);border-radius:14px;padding:14px;margin:-52px 14px 14px;box-shadow:0 10px 30px rgba(13,34,56,.18);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.panneau .large{grid-column:1/-1}
+label{display:block;font-size:.78rem;color:var(--gris);margin:0 0 3px;font-weight:600}
+input,select{width:100%;padding:12px;border:1px solid var(--ligne);border-radius:9px;font-size:1rem;background:#fafbf9;color:var(--texte)}
+input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+.stats{display:flex;gap:10px;padding:0 14px;margin-bottom:6px}
+.stat{flex:1;background:var(--carte);border:1px solid var(--ligne);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-family:Georgia,serif;font-size:1.3rem;color:var(--vert)}
+.stat span{font-size:.78rem;color:var(--gris)}
+#liste{padding:8px 14px}
+.carte{background:var(--carte);border:1px solid var(--ligne);border-radius:14px;margin-bottom:14px;overflow:hidden}
+.bandeau{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(120deg,var(--vert),#0f7a58);color:#fff;padding:12px 14px}
+.badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:3px 10px;border-radius:99px;font-size:.8rem;font-weight:600}
+.prix{font-family:Georgia,serif;font-weight:700;font-size:1.25rem}
+.prix small{font-family:system-ui,sans-serif;font-weight:400;font-size:.75rem;opacity:.85}
+.corps{padding:14px}
+.lieu{display:flex;align-items:center;gap:6px;font-weight:700;font-size:1.05rem}
+.lieu svg{flex:none}
+.infos{color:var(--gris);font-size:.88rem;margin:2px 0 8px}
+.desc{margin:0 0 14px;color:#2d3945}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-weight:700;padding:12px;border-radius:9px;font-size:.95rem}
+.wa{background:#1fa855;color:#fff}
+.tel{background:#fff;color:var(--nuit);border:1.5px solid var(--nuit)}
+.vide{text-align:center;color:var(--gris);padding:34px 10px}
+.pub{margin:6px 14px 22px;background:var(--nuit);color:#fff;border-radius:14px;padding:18px;text-align:center}
+.pub b{font-family:Georgia,serif;font-size:1.15rem;display:block;margin-bottom:4px}
+.pub p{margin:0 0 12px;color:#c9d4df;font-size:.9rem}
+.pub a{display:inline-block;background:var(--or);color:var(--nuit);font-weight:700;text-decoration:none;padding:12px 18px;border-radius:9px}
+footer{text-align:center;color:var(--gris);font-size:.8rem;padding:6px 16px 26px}
+@media(min-width:620px){.hero h1{font-size:2.2rem}#liste{display:grid;grid-template-columns:1fr 1fr;gap:14px}.carte{margin:0}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="logo">
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#c9a227"/><path d="M7 16.5L17 8l10 8.5V26H7z" fill="#0d2238"/><circle cx="17" cy="17" r="3.2" fill="#c9a227"/><path d="M17 24l-3-4.5a3.6 3.6 0 116 0z" fill="#c9a227" opacity="0"/></svg>
+    <div>House Localization<small>Le logement au Gabon, localisé</small></div>
+  </div>
+  <a id="publierHaut" href="#" style="display:none">Publier</a>
+</div>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Trouvez votre logement, sans courir les quartiers.</h1>
+    <p>Studios, appartements et maisons à louer, avec le prix, le quartier et le contact du propriétaire.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="panneau">
+    <div class="large"><label for="q">Recherche</label><input id="q" type="search" placeholder="Ex : Akanda, près du marché"></div>
+    <div><label for="type">Type de bien</label><select id="type"><option value="">Tous</option></select></div>
+    <div><label for="quartier">Quartier</label><select id="quartier"><option value="">Tous</option></select></div>
+    <div class="large"><label for="prixmax">Budget maximum par mois (FCFA)</label><input id="prixmax" type="number" inputmode="numeric" placeholder="Ex : 150000"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b id="nbAnn">0</b><span>annonces</span></div>
+    <div class="stat"><b id="nbQuartiers">0</b><span>quartiers</span></div>
+    <div class="stat"><b id="nbRes">0</b><span>résultats</span></div>
+  </div>
+
+  <div id="liste"></div>
+
+  <div class="pub" id="blocPub" style="display:none">
+    <b>Vous avez un bien à louer ?</b>
+    <p>Publiez votre annonce gratuitement en 2 minutes.</p>
+    <a id="publier" href="#" target="_blank" rel="noopener">Publier mon annonce</a>
+  </div>
+</div>
+<footer>Vérifiez toujours le bien avant de payer quoi que ce soit.<br>© House Localization</footer>
+
+<script>
+var LIEN_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRm9FAHkH7WCDOX4dJiviPnMlU7r6f1yx7e5Ey-qHVSaZlyme1B5jOIVWzbeK40zEtNkt1cR7_likig/pub?gid=1055167800&single=true&output=csv";
+var LIEN_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSdnb6UEAbRQhycLjT03ZD0K5Q5Svee0VUkebxb3Zm50uTk52g/viewform";
+
+var annonces=[];
+var PIN='<svg width="18" height="18" viewBox="0 0 24 24" fill="#0b5d43" aria-hidden="true"><path d="M12 2a7 7 0 00-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 00-7-7zm0 9.5A2.5 2.5 0 119.5 9 2.5 2.5 0 0112 11.5z"/></svg>';
+
+function parseCSV(t){
+  var rows=[],row=[],c="",q=false;
+  for(var i=0;i<t.length;i++){
+    var ch=t[i];
+    if(q){
+      if(ch=='"'&&t[i+1]=='"'){c+='"';i++;}
+      else if(ch=='"'){q=false;}
+      else c+=ch;
+    }else{
+      if(ch=='"')q=true;
+      else if(ch==","){row.push(c);c="";}
+      else if(ch=="\n"){row.push(c);rows.push(row);row=[];c="";}
+      else if(ch!="\r")c+=ch;
+    }
+  }
+  if(c!==""||row.length){row.push(c);rows.push(row);}
+  return rows;
+}
+function numWA(n){
+  var d=String(n||"").replace(/\D/g,"");
+  if(!d)return "";
+  if(d.indexOf("241")===0&&d.length>=11)return d;
+  return "241"+d.replace(/^0+/,"");
+}
+function esc(s){return String(s||"").replace(/[&<>"]/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m];});}
+function fmt(p){var n=parseInt(String(p).replace(/\D/g,""),10);return isNaN(n)?esc(p):n.toLocaleString("fr-FR")+" FCFA";}
+
+function charger(rows){
+  annonces=rows.filter(function(r){return r[1]&&r[2];}).map(function(r){
+    return {type:r[1].trim(),quartier:r[2].trim(),prix:r[3]||"",prixNum:parseInt(String(r[3]).replace(/\D/g,""),10)||0,pieces:r[4]||"",desc:r[5]||"",wa:numWA(r[6])};
+  }).reverse();
+  remplir("type","type");remplir("quartier","quartier");
+  document.getElementById("nbAnn").textContent=annonces.length;
+  var qs={};annonces.forEach(function(a){qs[a.quartier.toLowerCase()]=1;});
+  document.getElementById("nbQuartiers").textContent=Object.keys(qs).length;
+  afficher();
+}
+function remplir(id,cle){
+  var sel=document.getElementById(id),vus={};
+  annonces.forEach(function(a){
+    var v=a[cle];
+    if(!vus[v.toLowerCase()]){vus[v.toLowerCase()]=1;var o=document.createElement("option");o.value=v;o.textContent=v;sel.appendChild(o);}
+  });
+}
+function afficher(){
+  var q=document.getElementById("q").value.toLowerCase();
+  var t=document.getElementById("type").value;
+  var z=document.getElementById("quartier").value;
+  var m=parseInt(document.getElementById("prixmax").value,10);
+  var res=annonces.filter(function(a){
+    if(t&&a.type!==t)return false;
+    if(z&&a.quartier!==z)return false;
+    if(m&&a.prixNum>m)return false;
+    if(q&&(a.type+" "+a.quartier+" "+a.desc).toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+  document.getElementById("nbRes").textContent=res.length;
+  var h="";
+  res.forEach(function(a){
+    var msg=encodeURIComponent("Bonjour, je suis intéressé par votre "+a.type+" à "+a.quartier+" vu sur House Localization.");
+    h+='<div class="carte"><div class="bandeau"><span class="badge">'+esc(a.type)+'</span><span class="prix">'+fmt(a.prix)+' <small>/ mois</small></span></div>'+
+      '<div class="corps"><div class="lieu">'+PIN+esc(a.quartier)+'</div>'+
+      '<div class="infos">'+(a.pieces?esc(a.pieces)+' pièce(s)':'')+'</div>'+
+      '<p class="desc">'+esc(a.desc)+'</p>'+
+      (a.wa?'<div class="actions"><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/'+a.wa+'?text='+msg+'">WhatsApp</a><a class="btn tel" href="tel:+'+a.wa+'">Appeler</a></div>':'')+
+      '</div></div>';
+  });
+  document.getElementById("liste").innerHTML=h||'<div class="vide">Aucune annonce ne correspond. Essayez un autre quartier ou un budget plus élevé.</div>';
+}
+["q","type","quartier","prixmax"].forEach(function(id){document.getElementById(id).addEventListener("input",afficher);});
+
+if(LIEN_FORM){
+  document.getElementById("blocPub").style.display="block";
+  document.getElementById("publier").href=LIEN_FORM;
+  var h=document.getElementById("publierHaut");h.href=LIEN_FORM;h.target="_blank";h.style.display="inline-block";
+}
+fetch(LIEN_CSV).then(function(r){return r.text();}).then(function(t){
+  var rows=parseCSV(t);rows.shift();charger(rows);
+}).catch(function(){
+  document.getElementById("liste").innerHTML='<div class="vide">Impossible de charger les annonces. Vérifiez votre connexion et réessayez.</div>';
+});
+</script>
+</body>
+</html>
