@@ -56,7 +56,7 @@ footer{text-align:center;color:var(--gris);font-size:.8rem;padding:6px 16px 26px
     <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#c9a227"/><path d="M7 16.5L17 8l10 8.5V26H7z" fill="#0d2238"/><circle cx="17" cy="17" r="3.2" fill="#c9a227"/><path d="M17 24l-3-4.5a3.6 3.6 0 116 0z" fill="#c9a227" opacity="0"/></svg>
     <div>House Localization<small>Le logement au Gabon, localisé</small></div>
   </div>
-  <a id="publierHaut" href="#" style="display:none">Publier</a>
+  <a id="publierHaut" href="https://docs.google.com/forms/d/e/1FAIpQLSdnb6UEAbRQhycLjT03ZD0K5Q5Svee0VUkebxb3Zm50uTk52g/viewform" target="_blank" rel="noopener">Publier</a>
 </div>
 
 <div class="hero">
@@ -82,15 +82,16 @@ footer{text-align:center;color:var(--gris);font-size:.8rem;padding:6px 16px 26px
 
   <div id="liste"></div>
 
-  <div class="pub" id="blocPub" style="display:none">
+  <div class="pub" id="blocPub">
     <b>Vous avez un bien à louer ?</b>
     <p>Publiez votre annonce gratuitement en 2 minutes.</p>
-    <a id="publier" href="#" target="_blank" rel="noopener">Publier mon annonce</a>
+    <a id="publier" href="https://docs.google.com/forms/d/e/1FAIpQLSdnb6UEAbRQhycLjT03ZD0K5Q5Svee0VUkebxb3Zm50uTk52g/viewform" target="_blank" rel="noopener">Publier mon annonce</a>
   </div>
 </div>
 <footer>Vérifiez toujours le bien avant de payer quoi que ce soit.<br>© House Localization</footer>
 
 <script>
+window.onerror=function(m){var d=document.createElement("div");d.style.cssText="background:#b00020;color:#fff;padding:10px;font-size:.85rem";d.textContent="Erreur du site : "+m;document.body.insertBefore(d,document.body.firstChild);};
 var LIEN_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRm9FAHkH7WCDOX4dJiviPnMlU7r6f1yx7e5Ey-qHVSaZlyme1B5jOIVWzbeK40zEtNkt1cR7_likig/pub?gid=1055167800&single=true&output=csv";
 var LIEN_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSdnb6UEAbRQhycLjT03ZD0K5Q5Svee0VUkebxb3Zm50uTk52g/viewform";
 
@@ -174,4 +175,25 @@ function afficher(){
     var msg=encodeURIComponent("Bonjour, je suis intéressé par votre "+a.type+" à "+a.quartier+" vu sur House Localization.");
     h+='<div class="carte">'+gal(a)+'<div class="bandeau"><span class="badge">'+esc(a.type)+'</span><span class="prix">'+fmt(a.prix)+' <small>/ mois</small></span></div>'+
       '<div class="corps"><div class="lieu">'+PIN+esc(a.quartier)+'</div>'+
-      '<div class="infos">'+(a.pieces?esc(a.pieces)+' pi
+      '<div class="infos">'+(a.pieces?esc(a.pieces)+' pièce(s)':'')+'</div>'+
+      '<p class="desc">'+esc(a.desc)+'</p>'+
+      (a.wa?'<div class="actions"><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/'+a.wa+'?text='+msg+'">WhatsApp</a><a class="btn tel" href="tel:+'+a.wa+'">Appeler</a></div>':'')+
+      '</div></div>';
+  });
+  document.getElementById("liste").innerHTML=h||'<div class="vide">Aucune annonce ne correspond. Essayez un autre quartier ou un budget plus élevé.</div>';
+}
+["q","type","quartier","prixmax"].forEach(function(id){document.getElementById(id).addEventListener("input",afficher);});
+
+if(LIEN_FORM){
+  document.getElementById("blocPub").style.display="block";
+  document.getElementById("publier").href=LIEN_FORM;
+  var h=document.getElementById("publierHaut");h.href=LIEN_FORM;h.target="_blank";h.style.display="inline-block";
+}
+fetch(LIEN_CSV).then(function(r){return r.text();}).then(function(t){
+  var rows=parseCSV(t);var head=rows.shift();charger(rows,head);
+}).catch(function(){
+  document.getElementById("liste").innerHTML='<div class="vide">Impossible de charger les annonces. Vérifiez votre connexion et réessayez.</div>';
+});
+</script>
+</body>
+</html>
