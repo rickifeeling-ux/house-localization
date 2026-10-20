@@ -31,6 +31,7 @@ input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(-
 .badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:3px 10px;border-radius:99px;font-size:.8rem;font-weight:600}
 .prix{font-family:Georgia,serif;font-weight:700;font-size:1.25rem}
 .prix small{font-family:system-ui,sans-serif;font-weight:400;font-size:.75rem;opacity:.85}
+.galerie{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:3px;background:#dfe4de}.galerie a{flex:0 0 88%;scroll-snap-align:start}.galerie a:only-child{flex-basis:100%}.galerie img{width:100%;height:210px;object-fit:cover;display:block}
 .corps{padding:14px}
 .lieu{display:flex;align-items:center;gap:6px;font-weight:700;font-size:1.05rem}
 .lieu svg{flex:none}
@@ -120,12 +121,27 @@ function numWA(n){
   if(d.indexOf("241")===0&&d.length>=11)return d;
   return "241"+d.replace(/^0+/,"");
 }
+function parsePhotos(s){
+  return String(s||"").split(/[\s,;]+/).filter(function(u){return /^https?:\/\//.test(u);}).map(function(u){
+    var m=u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([\w-]+)/);
+    return m?"https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1000":u;
+  });
+}
+function gal(a){
+  if(!a.photos.length)return "";
+  return '<div class="galerie">'+a.photos.map(function(u){return '<a href="'+esc(u)+'" target="_blank" rel="noopener"><img loading="lazy" src="'+esc(u)+'" alt="Photo '+esc(a.type)+' '+esc(a.quartier)+'"></a>';}).join("")+'</div>';
+}
 function esc(s){return String(s||"").replace(/[&<>"]/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m];});}
 function fmt(p){var n=parseInt(String(p).replace(/\D/g,""),10);return isNaN(n)?esc(p):n.toLocaleString("fr-FR")+" FCFA";}
 
-function charger(rows){
-  annonces=rows.filter(function(r){return r[1]&&r[2];}).map(function(r){
-    return {type:r[1].trim(),quartier:r[2].trim(),prix:r[3]||"",prixNum:parseInt(String(r[3]).replace(/\D/g,""),10)||0,pieces:r[4]||"",desc:r[5]||"",wa:numWA(r[6])};
+function colonne(head,mot,defaut){
+  for(var i=0;i<head.length;i++){if(String(head[i]).toLowerCase().indexOf(mot)>=0)return i;}
+  return defaut;
+}
+function charger(rows,head){
+  var iSt=colonne(head,"statut",-1),iPh=colonne(head,"photo",7);
+  annonces=rows.filter(function(r){return r[1]&&r[2]&&iSt>=0&&String(r[iSt]||"").trim().toUpperCase()==="OUI";}).map(function(r){
+    return {type:r[1].trim(),quartier:r[2].trim(),prix:r[3]||"",prixNum:parseInt(String(r[3]).replace(/\D/g,""),10)||0,pieces:r[4]||"",desc:r[5]||"",wa:numWA(r[6]),photos:parsePhotos(r[iPh])};
   }).reverse();
   remplir("type","type");remplir("quartier","quartier");
   document.getElementById("nbAnn").textContent=annonces.length;
@@ -156,27 +172,6 @@ function afficher(){
   var h="";
   res.forEach(function(a){
     var msg=encodeURIComponent("Bonjour, je suis intéressé par votre "+a.type+" à "+a.quartier+" vu sur House Localization.");
-    h+='<div class="carte"><div class="bandeau"><span class="badge">'+esc(a.type)+'</span><span class="prix">'+fmt(a.prix)+' <small>/ mois</small></span></div>'+
+    h+='<div class="carte">'+gal(a)+'<div class="bandeau"><span class="badge">'+esc(a.type)+'</span><span class="prix">'+fmt(a.prix)+' <small>/ mois</small></span></div>'+
       '<div class="corps"><div class="lieu">'+PIN+esc(a.quartier)+'</div>'+
-      '<div class="infos">'+(a.pieces?esc(a.pieces)+' pièce(s)':'')+'</div>'+
-      '<p class="desc">'+esc(a.desc)+'</p>'+
-      (a.wa?'<div class="actions"><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/'+a.wa+'?text='+msg+'">WhatsApp</a><a class="btn tel" href="tel:+'+a.wa+'">Appeler</a></div>':'')+
-      '</div></div>';
-  });
-  document.getElementById("liste").innerHTML=h||'<div class="vide">Aucune annonce ne correspond. Essayez un autre quartier ou un budget plus élevé.</div>';
-}
-["q","type","quartier","prixmax"].forEach(function(id){document.getElementById(id).addEventListener("input",afficher);});
-
-if(LIEN_FORM){
-  document.getElementById("blocPub").style.display="block";
-  document.getElementById("publier").href=LIEN_FORM;
-  var h=document.getElementById("publierHaut");h.href=LIEN_FORM;h.target="_blank";h.style.display="inline-block";
-}
-fetch(LIEN_CSV).then(function(r){return r.text();}).then(function(t){
-  var rows=parseCSV(t);rows.shift();charger(rows);
-}).catch(function(){
-  document.getElementById("liste").innerHTML='<div class="vide">Impossible de charger les annonces. Vérifiez votre connexion et réessayez.</div>';
-});
-</script>
-</body>
-</html>
+      '<div class="infos">'+(a.pieces?esc(a.pieces)+' pi
